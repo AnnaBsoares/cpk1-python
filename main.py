@@ -1,22 +1,23 @@
+#-------------------RM99814- ANNA SOARES ---------------------------------------
+
+#entrar na tabela e achar os dados 
 def carregar_dados(file_path):
     try:
-        with open(file_path, 'r') as arquivo:
-            linhas = arquivo.readlines()
-            colunas = linhas[0].strip().split(',')
-            dados = [linha.strip().split(',') for linha in linhas[1:]]
+        with open(file_path, 'r') as arquivo:   #with para abrir o arquivo especificado 
+            linhas = arquivo.readlines()        #Le todas as linhas do arquivo e armazena cada linha como um elemento da lista chamada linhas
+            colunas = linhas[0].strip().split(',')    #tira a primeira linha da lista, q tem o cabeçalho  strip() remove  espaços em branco extras  
+            dados = [linha.strip().split(',') for linha in linhas[1:]]   # cria uma lista chamada dados Cada linha é dividida em valores usando a vírgula 
 
             for entrada in dados:
                 for i, coluna in enumerate(colunas):
                     if "Rate" in coluna:
                         indice_rate = i
                         if indice_rate < len(entrada):
-                            entrada[indice_rate] = entrada[indice_rate].strip('"')
+                            entrada[indice_rate] = entrada[indice_rate].strip('"')  #Remove as aspas duplas do valor da coluna com avaliações
 
-            return colunas, dados
+            return colunas, dados #Retorna a lista de colunas (cabeçalhos) e a lista de dados processados.
     except FileNotFoundError:
-        return None, None
-
-
+        return None, None   #caso o arquivo nao é encontradp 
 
 def calcular_media_avaliacao(dados, indice_empresa, indice_avaliacao):
     total_marvel = 0
@@ -36,7 +37,6 @@ def calcular_media_avaliacao(dados, indice_empresa, indice_avaliacao):
     media_dc = total_dc / contagem_dc if contagem_dc > 0 else 0
 
     return media_marvel, media_dc
-
 def calcular_total(dados, indice_empresa, indice_valor):
     total_marvel = 0
     total_dc = 0
@@ -48,28 +48,21 @@ def calcular_total(dados, indice_empresa, indice_valor):
             total_dc += float(entrada[indice_valor])
 
     return total_marvel, total_dc
-
-
-
-
-
-
 # opçao numero 1 
 def analisar_avaliacao(dados, colunas):
-    indice_empresa = colunas.index("Company")
+    #encontrar o indice 
+    indice_empresa = colunas.index("Company") 
     indice_avaliacao = colunas.index("Rate")
+    #calcular media 
     media_marvel, media_dc = calcular_media_avaliacao(dados, indice_empresa, indice_avaliacao)
 
-    print("\nMédia de Avaliações:")
+    print("Média de Avaliações:")
     print("Marvel:", media_marvel)
     print("DC:", media_dc)
     
+    #mostrar qm venceu 
     vencedor = "Marvel" if media_marvel > media_dc else "DC"
     print(f"Quem vence nesse quesito: {vencedor}")
-
-
-
-
 #opçao numero 2
 def comparar_total_orcamento(dados, colunas):
     indice_empresa = colunas.index("Company")
@@ -82,11 +75,6 @@ def comparar_total_orcamento(dados, colunas):
     
     vencedor = "Marvel" if total_marvel > total_dc else "DC"
     print(f"Quem vence nesse quesito: {vencedor}")
-
-
-
-
-
 #opçao numero 3
 def comparar_total_faturamento(dados, colunas):
     indice_empresa = colunas.index("Company")
